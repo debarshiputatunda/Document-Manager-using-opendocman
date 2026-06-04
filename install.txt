@@ -1,0 +1,178 @@
+Document Repository Installation Guide
+======================================
+
+This file explains what must be installed before running the setup scripts,
+and how to run the application after setup.
+
+
+Required software
+-----------------
+
+Install these first:
+
+1. PHP 8 or newer
+2. MySQL Server and MySQL command-line client
+3. Node.js LTS, which includes npm
+4. Git, if you are cloning from GitHub
+
+
+macOS setup
+-----------
+
+Recommended using Homebrew:
+
+  brew install php mysql node git
+
+Start MySQL:
+
+  brew services start mysql
+
+Create the default MySQL user if needed:
+
+  mysql -u root -p
+
+Then run:
+
+  CREATE USER 'odmuser'@'localhost' IDENTIFIED BY 'odm123';
+  GRANT ALL PRIVILEGES ON opendocman.* TO 'odmuser'@'localhost';
+  FLUSH PRIVILEGES;
+  EXIT;
+
+Run the project setup:
+
+  cd document-management
+  ./setup-new-machine.sh
+
+
+Linux setup
+-----------
+
+Debian/Ubuntu example:
+
+  sudo apt update
+  sudo apt install php php-mysql mysql-server nodejs npm git
+
+Start MySQL:
+
+  sudo systemctl enable --now mysql
+
+Create the default MySQL user if needed:
+
+  sudo mysql
+
+Then run:
+
+  CREATE USER 'odmuser'@'localhost' IDENTIFIED BY 'odm123';
+  GRANT ALL PRIVILEGES ON opendocman.* TO 'odmuser'@'localhost';
+  FLUSH PRIVILEGES;
+  EXIT;
+
+Run the project setup:
+
+  cd document-management
+  ./setup-new-machine.sh
+
+
+Windows setup
+-------------
+
+Install:
+
+1. PHP 8 or newer
+   https://windows.php.net/download/
+
+2. MySQL Community Server
+   https://dev.mysql.com/downloads/mysql/
+
+3. Node.js LTS
+   https://nodejs.org/
+
+4. Git for Windows
+   https://git-scm.com/download/win
+
+Make sure these commands work in PowerShell:
+
+  php -v
+  mysql --version
+  node -v
+  npm -v
+  git --version
+
+Create the default MySQL user if needed:
+
+  mysql -u root -p
+
+Then run:
+
+  CREATE USER 'odmuser'@'localhost' IDENTIFIED BY 'odm123';
+  GRANT ALL PRIVILEGES ON opendocman.* TO 'odmuser'@'localhost';
+  FLUSH PRIVILEGES;
+  EXIT;
+
+Run the Windows setup script:
+
+  cd document-management
+  Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+  .\setup-windows.ps1
+
+If storage permissions are blocked, rerun with Administrator prompt:
+
+  .\setup-windows.ps1 -RequireAdmin
+
+
+Fresh database behavior
+-----------------------
+
+Both setup scripts create a fresh database using:
+
+  database_schema.sql
+
+They do not import:
+
+  opendocman_backup.sql
+
+They do not copy old document data from this machine.
+
+
+Running the application after setup
+-----------------------------------
+
+Start the backend from document-management:
+
+macOS/Linux:
+
+  APP_DB_HOST="localhost" APP_DB_NAME="opendocman" APP_DB_USER="odmuser" APP_DB_PASS="odm123" ODM_STORAGE_DIR="../document-storage" php -S localhost:8000 -t backend
+
+Windows PowerShell:
+
+  $env:APP_DB_HOST="localhost"; $env:APP_DB_NAME="opendocman"; $env:APP_DB_USER="odmuser"; $env:APP_DB_PASS="odm123"; $env:ODM_STORAGE_DIR="..\document-storage"; php -S localhost:8000 -t backend
+
+Start the frontend from document-management/frontend:
+
+  npm run dev
+
+Open:
+
+  http://127.0.0.1:5173/
+
+
+Common errors
+-------------
+
+"php is required but was not found"
+  Install PHP and ensure it is available in PATH.
+
+"node is required but was not found"
+  Install Node.js LTS and ensure it is available in PATH.
+
+"npm is required but was not found"
+  Install Node.js LTS. npm is included with Node.js.
+
+"mysql is required but was not found"
+  Install MySQL Server including the command-line client, and ensure it is in PATH.
+
+"Could not connect to MySQL"
+  Start MySQL and verify DB host, user, and password.
+
+"Storage directory is not writable"
+  Choose a writable storage path or rerun the setup with appropriate permissions.

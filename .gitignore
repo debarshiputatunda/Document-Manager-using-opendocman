@@ -1,0 +1,22 @@
+.DS_Store
+Thumbs.db
+
+# Local dependencies/build outputs
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+
+# Local logs/env
+*.log
+*.local
+.env
+.env.*
+
+# Runtime document storage should not be committed
+../document-storage/
+document-storage/
+
+# Local OpenDocMan copies/backups not used by the custom app
+opendocman_new/
+opendocman_backup/
+opendocman_backup.sql

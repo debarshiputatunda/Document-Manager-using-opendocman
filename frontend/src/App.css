@@ -1,0 +1,407 @@
+.app-shell {
+  max-width: 700px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px 1rem 48px;
+  box-sizing: border-box;
+}
+
+.app-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #d7dde5;
+  padding-bottom: 20px;
+}
+
+.app-header h1 {
+  margin: 0 0 6px;
+  color: #152033;
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: 650;
+}
+
+.app-header p {
+  margin: 0;
+  color: #5d6675;
+}
+
+.panel {
+  margin-top: 20px;
+  border: 1px solid #d7dde5;
+  border-radius: 6px;
+  background: #ffffff;
+  padding: 1.25rem 1.5rem;
+}
+
+.panel h2 {
+  margin: 0 0 16px;
+  color: #152033;
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 650;
+}
+
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.file-field {
+  display: grid;
+  gap: 8px;
+}
+
+.field-label {
+  color: #303a49;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.file-picker {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+}
+
+.native-file-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.native-file-input:disabled {
+  cursor: not-allowed;
+}
+
+.file-picker-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  box-sizing: border-box;
+  border: 1px solid #b8c1cc;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #172033;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.native-file-input:focus + .file-picker-button {
+  border-color: #2f6fab;
+  outline: 3px solid rgba(47, 111, 171, 0.18);
+}
+
+.native-file-input:disabled + .file-picker-button {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.selected-file {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  border: 1px solid #bfd7ef;
+  border-radius: 8px;
+  background: #f0f7ff;
+  color: #24364a;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.selected-file-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.file-icon {
+  flex: 0 0 auto;
+  line-height: 1;
+  font-size: 18px;
+}
+
+.file-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  color: #303a49;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #b8c1cc;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #172033;
+  font: inherit;
+  font-size: 15px;
+  padding: 9px 10px;
+}
+
+input:focus {
+  border-color: #2f6fab;
+  outline: 3px solid rgba(47, 111, 171, 0.18);
+}
+
+button,
+.actions a {
+  min-height: 40px;
+  border: 1px solid #255f98;
+  border-radius: 4px;
+  background: #255f98;
+  color: #ffffff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 650;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button {
+  padding: 0 16px;
+}
+
+button:hover,
+.actions a:hover {
+  background: #1f527f;
+  border-color: #1f527f;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.secondary-button {
+  background: #ffffff;
+  color: #255f98;
+}
+
+.secondary-button:hover {
+  background: #eef4fa;
+  color: #1f527f;
+}
+
+.remove-file-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  min-height: 30px;
+  margin-left: auto;
+  padding: 0;
+  border-color: #f0c5c5;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #b42318;
+  line-height: 1;
+}
+
+.remove-file-btn:hover {
+  border-color: #e08a8a;
+  background: #fff1f1;
+  color: #8f1d16;
+}
+
+.status {
+  margin: 14px 0 0;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.success {
+  border: 1px solid #a9d2b2;
+  background: #f1faf3;
+  color: #235b31;
+}
+
+.error {
+  border: 1px solid #e1a8a8;
+  background: #fff4f4;
+  color: #8a2b2b;
+}
+
+.empty-state {
+  margin: 0;
+  color: #667085;
+}
+
+.document-list {
+  display: grid;
+  gap: 16px;
+}
+
+.document-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 170px;
+  gap: 12px;
+  align-items: end;
+}
+
+.table-wrap {
+  width: 100%;
+}
+
+table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  box-sizing: border-box;
+}
+
+.title-column {
+  width: 18%;
+}
+
+.filename-column {
+  width: 40%;
+}
+
+.date-column {
+  width: 22%;
+}
+
+.actions-column {
+  width: 20%;
+}
+
+th,
+td {
+  box-sizing: border-box;
+  border-bottom: 1px solid #e4e8ee;
+  padding: 12px 10px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+th {
+  background: #f6f8fb;
+  color: #303a49;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+td {
+  color: #172033;
+  font-size: 14px;
+}
+
+.truncate-cell {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+.actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  min-height: 30px;
+  padding: 0;
+}
+
+.table-action-icon {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #5d6675;
+  font-size: 14px;
+}
+
+.pagination p {
+  margin: 0;
+}
+
+.pagination-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagination-actions .secondary-button {
+  min-height: 34px;
+  padding: 0 10px;
+}
+
+@media (max-width: 760px) {
+  .document-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .pagination {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .pagination-actions {
+    justify-content: space-between;
+  }
+
+  .upload-actions > button,
+  .secondary-button {
+    width: 100%;
+  }
+
+  .pagination-actions .secondary-button {
+    width: auto;
+  }
+
+  .remove-file-btn {
+    width: 30px;
+  }
+}
