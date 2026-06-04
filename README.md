@@ -1,52 +1,94 @@
-# Document Repository Frontend
+# Document Repository
 
-## Overview
+A lightweight document management system built with React, Vite, PHP, MySQL, and OpenDocMan.
 
-This project is a lightweight document repository application built using:
+This project provides a modern document repository interface while using OpenDocMan as the underlying storage and metadata engine.
 
-- React + Vite (Frontend)
-- PHP (Backend APIs)
-- MySQL (Database)
-- OpenDocMan (Storage Backend)
+The OpenDocMan UI is not used. All user interactions happen through a custom React frontend and PHP API layer.
 
-OpenDocMan is used only as a document storage engine.
+---
 
-The OpenDocMan user interface is not part of this application.
+## Features
+
+* Upload documents
+* Store files using OpenDocMan storage conventions
+* View supported files directly in the browser
+* Download files using original filenames
+* Maintain document metadata
+* Responsive modern UI
+* Lightweight PHP backend
+* MySQL persistence
+* OpenDocMan-backed storage
+
+---
+
+## Technology Stack
+
+### Frontend
+
+* React
+* Vite
+* JavaScript
+* CSS
+
+### Backend
+
+* PHP 8+
+* PDO
+
+### Database
+
+* MySQL
+
+### Storage Engine
+
+* OpenDocMan
 
 ---
 
 ## Architecture
 
+```text
 React Frontend
-    ↓
-PHP APIs
-    ↓
-MySQL
-    ↓
-OpenDocMan Storage
+        │
+        ▼
+PHP API Layer
+        │
+        ▼
+MySQL Database
+        │
+        ▼
+OpenDocMan Metadata + File Storage
+```
+
+OpenDocMan is used only for document storage and metadata persistence.
+
+The OpenDocMan web interface is not part of this application.
 
 ---
 
 ## Repository Structure
 
 ```text
-frontend/
-backend/
-opendocman/
-document-storage/
-
-AGENTS.md
-CONTEXT.md
-PRD.md
-database_schema.sql
-README.md
+Projects/
+├── opendocman frontend/
+│   ├── frontend/
+│   ├── backend/
+│   ├── opendocman/
+│   ├── AGENTS.md
+│   ├── CONTEXT.md
+│   ├── PRD.md
+│   ├── database_schema.sql
+│   └── README.md
+│
+└── document-storage/
 ```
 
 ---
 
 ## OpenDocMan Integration
 
-### Metadata
+### Metadata Storage
 
 Document metadata is stored in:
 
@@ -63,19 +105,23 @@ description
 created
 owner
 category
+status
+publishable
 ```
 
-### Physical Storage
+### Physical File Storage
 
-Files are stored as:
+Files are stored using OpenDocMan conventions:
 
 ```text
 <odm_data.id>.dat
 ```
 
-Example:
+Examples:
 
 ```text
+1.dat
+2.dat
 42.dat
 ```
 
@@ -85,158 +131,106 @@ Original filename:
 odm_data.realname
 ```
 
-Storage directory:
+---
+
+## Storage Directory
+
+Uploaded files are stored outside the repository.
+
+Example:
 
 ```text
-document-storage/
+/Users/debarshi/Projects/document-storage
 ```
 
----
-
-## Required Features
-
-### Upload Document
-
-User provides:
-
-- Title
-- File
-
-System:
-
-1. Validates file
-2. Inserts metadata into odm_data
-3. Gets odm_data.id
-4. Stores file as:
-
-   <odm_data.id>.dat
-
-5. Inserts reference into app_documents
+The storage location is configured through backend and OpenDocMan configuration.
 
 ---
 
-### List Documents
+## Upload Flow
 
-Display:
+1. User enters title and selects a file.
+2. Frontend submits the upload request.
+3. Backend validates:
 
-- Title
-- Original Filename
-- Upload Date
+   * File size
+   * MIME type
+   * Extension
+4. Metadata is inserted into `odm_data`.
+5. Generated `odm_data.id` is retrieved.
+6. File is stored as:
 
-Actions:
+```text
+<odm_data.id>.dat
+```
 
-- View
-- Download
+7. A reference record is inserted into:
 
----
+```sql
+app_documents
+```
 
-### View Document
-
-Open supported file types in browser.
-
----
-
-### Download Document
-
-Download using original filename.
-
----
-
-## Technology Stack
-
-### Frontend
-
-- React
-- Vite
-- JavaScript
-- CSS
-
-### Backend
-
-- PHP 8+
-- PDO
-
-### Database
-
-- MySQL
+8. Frontend refreshes automatically.
 
 ---
 
-## Development Rules
+## Document Listing
 
-- Do not modify OpenDocMan source code.
-- Do not use OpenDocMan UI.
-- Keep all custom code separate from OpenDocMan.
-- Use PDO prepared statements.
-- Return JSON from APIs.
-- Use React functional components.
-- Use plain CSS.
-- Avoid unnecessary dependencies.
+Displayed fields:
 
----
+* Title
+* Original Filename
+* Upload Date
 
-## GitHub And Licensing Notes
+Available actions:
 
-Before pushing this project to GitHub:
-
-- Keep OpenDocMan license files in the repository if `opendocman/` is included.
-- OpenDocMan is GPL-licensed, so comply with its GPL license terms when redistributing this repository.
-- Do not commit generated dependencies or build output:
-  - `frontend/node_modules/`
-  - `frontend/dist/`
-- Do not commit runtime document storage:
-  - `document-storage/`
-- Do not commit local backup copies or database dumps:
-  - `opendocman_new/`
-  - `opendocman_backup/`
-  - `opendocman_backup.sql`
-
-These paths are covered by the root `.gitignore`.
+* View
+* Download
 
 ---
 
-## Security Requirements
+## Security
 
 Allowed file types:
 
-- pdf
-- doc
-- docx
-- xls
-- xlsx
-- ppt
-- pptx
-- jpg
-- jpeg
-- png
+```text
+pdf
+doc
+docx
+xls
+xlsx
+ppt
+pptx
+jpg
+jpeg
+png
+```
 
 Maximum file size:
 
+```text
 20 MB
+```
 
-Validate:
+Validation includes:
 
-- MIME type
-- Extension
-- File size
+* MIME type validation
+* Extension validation
+* File size validation
 
-Prevent:
+Protection against:
 
-- SQL Injection
-- Path Traversal
-- Arbitrary File Execution
+* SQL Injection
+* Path Traversal
+* Arbitrary File Execution
+
+All database operations use PDO prepared statements.
 
 ---
 
 ## Local Development
 
-For full machine setup instructions and prerequisite installation commands, see:
-
-```text
-install.txt
-```
-
-Frontend:
+### Frontend
 
 ```bash
 cd frontend
@@ -244,13 +238,16 @@ npm install
 npm run dev
 ```
 
-Backend:
+Default URL:
 
-Serve PHP APIs locally.
+```text
+http://localhost:5173
+```
 
-Example:
+### Backend
 
 ```bash
+cd backend
 php -S localhost:8080
 ```
 
@@ -264,21 +261,59 @@ Schema reference:
 database_schema.sql
 ```
 
-Use this schema as the source of truth.
-
-Do not depend on live database inspection.
+This file is the source of truth for the database structure.
 
 ---
 
-## Agent Instructions
+## Screenshots
 
-All AI coding agents must read:
+### Upload Page
 
-1. AGENTS.md
-2. CONTEXT.md
-3. PRD.md
-4. database_schema.sql
+![Upload Page](docs/screenshots/upload-page.png)
 
-before implementation.
+### Documents List
+
+![Documents List](docs/screenshots/document-list.png)
+
+### Upload Success
+
+![Upload Success](docs/screenshots/upload-success.png)
+
+---
+
+## Development Guidelines
+
+* Do not modify OpenDocMan source code.
+* Keep all custom code separate from OpenDocMan.
+* Use React functional components.
+* Use plain CSS.
+* Use PDO prepared statements.
+* Return JSON from APIs.
+* Avoid unnecessary dependencies.
+
+---
+
+## AI Agent Instructions
+
+Before implementation, AI agents must read:
+
+```text
+AGENTS.md
+CONTEXT.md
+PRD.md
+database_schema.sql
+```
 
 These files are authoritative.
+
+---
+
+## License
+
+This project integrates OpenDocMan.
+
+OpenDocMan is licensed under the GNU General Public License (GPL).
+
+If OpenDocMan source code is redistributed with this repository, all applicable GPL requirements must be followed.
+
+Refer to the license files contained within the `opendocman/` directory.
