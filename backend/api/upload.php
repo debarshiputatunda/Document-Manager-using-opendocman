@@ -84,6 +84,7 @@ try {
     }
 
     $pdo = get_pdo();
+    ensure_app_documents_deleted_at($pdo);
     $categoryId = first_table_id($pdo, 'odm_category') ?? 0;
     $departmentId = first_table_id($pdo, 'odm_department');
 

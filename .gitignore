@@ -11,6 +11,7 @@ frontend/dist-ssr/
 *.local
 .env
 .env.*
+backend/config/production.php
 
 # Runtime document storage should not be committed
 ../document-storage/

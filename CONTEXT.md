@@ -9,6 +9,10 @@ The application allows users to:
 * Upload files
 * View uploaded files
 * Download files
+* Search, sort, and paginate documents
+* Edit custom document titles
+* Soft delete custom app records
+* Check application health
 
 OpenDocMan is used only for storage.
 
@@ -74,13 +78,20 @@ realname
 CREATE TABLE app_documents (
 id INT AUTO_INCREMENT PRIMARY KEY,
 title VARCHAR(255) NOT NULL,
-odm_id INT NOT NULL,
-created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+odm_document_id INT NOT NULL,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+deleted_at TIMESTAMP NULL DEFAULT NULL
 );
 
 Relationship:
 
-app_documents.odm_id -> odm_data.id
+app_documents.odm_document_id -> odm_data.id
+
+Soft delete behavior:
+
+app_documents.deleted_at is set when a document is removed from the custom UI.
+
+The OpenDocMan metadata row and physical `<odm_data.id>.dat` file are not deleted by the custom app.
 
 ---
 
@@ -112,13 +123,13 @@ Return Success
 
 app_document_id
 ↓
-Find odm_id
+Find app_documents.odm_document_id
 ↓
 Find Original Filename
 ↓
 Load:
 
-<odm_id>.dat
+<odm_document_id>.dat
 
 ```
 ↓
@@ -132,7 +143,7 @@ Return File To Browser
 
 React + Vite
 
-Single page application.
+Single page application with a simple health route.
 
 Simple and functional.
 
@@ -148,6 +159,28 @@ Only:
 * Document list
 * View action
 * Download action
+* Search/filter/sort/pagination controls
+* Document details/edit panel
+* Health page
+
+Current implemented frontend behavior:
+
+* Drag-and-drop upload
+* Upload progress
+* Duplicate filename warning
+* Selected-file chip with remove button
+* Server-side search, date filtering, sorting, and pagination
+* Unsupported browser preview types prompt the user to download instead
+
+Current implemented backend APIs:
+
+* POST /api/upload.php
+* GET /api/documents.php
+* GET /api/view.php?id={id}
+* GET /api/download.php?id={id}
+* POST /api/update_title.php
+* POST /api/delete.php
+* GET /api/health.php
 
 
 ## OpenDocMan Storage
@@ -193,3 +226,25 @@ document-storage/
 
 All uploaded files are stored there using OpenDocMan's existing convention:
 <odm_data.id>.dat
+
+## Configuration
+
+Local defaults can be provided with environment variables:
+
+* APP_DB_HOST
+* APP_DB_NAME
+* APP_DB_USER
+* APP_DB_PASS
+* ODM_STORAGE_DIR
+
+Production-style installs can copy:
+
+backend/config/production.example.php
+
+to:
+
+backend/config/production.php
+
+`production.php` is ignored by git and should contain machine-specific credentials and paths.
+
+Environment variables still take precedence when set.
