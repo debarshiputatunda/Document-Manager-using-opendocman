@@ -137,6 +137,15 @@ They do not copy old document data from this machine.
 Running the application after setup
 -----------------------------------
 
+Optional production-style config file:
+
+  cp backend/config/production.example.php backend/config/production.php
+
+Edit backend/config/production.php for the target machine database credentials
+and storage directory.
+
+Environment variables still take precedence over production.php.
+
 Start the backend from document-management:
 
 macOS/Linux:
@@ -154,6 +163,14 @@ Start the frontend from document-management/frontend:
 Open:
 
   http://127.0.0.1:5173/
+
+Health page:
+
+  http://127.0.0.1:5173/health
+
+Health API:
+
+  http://localhost:8000/api/health.php
 
 
 Common errors

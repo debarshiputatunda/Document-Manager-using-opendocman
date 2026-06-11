@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/config.php';
+
 function get_pdo(): PDO
 {
     static $pdo = null;
@@ -10,10 +12,10 @@ function get_pdo(): PDO
         return $pdo;
     }
 
-    $host = getenv('APP_DB_HOST') ?: 'localhost';
-    $database = getenv('APP_DB_NAME') ?: 'opendocman';
-    $user = getenv('APP_DB_USER') ?: 'odmuser';
-    $password = getenv('APP_DB_PASS') ?: 'odm123';
+    $host = (string) app_env_or_config('APP_DB_HOST', 'db_host', 'localhost');
+    $database = (string) app_env_or_config('APP_DB_NAME', 'db_name', 'opendocman');
+    $user = (string) app_env_or_config('APP_DB_USER', 'db_user', 'odmuser');
+    $password = (string) app_env_or_config('APP_DB_PASS', 'db_pass', 'odm123');
 
     $dsn = "mysql:host={$host};dbname={$database};charset=utf8mb4";
 

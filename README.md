@@ -11,10 +11,18 @@ The OpenDocMan UI is not used. All user interactions happen through a custom Rea
 ## Features
 
 * Upload documents
+* Drag-and-drop upload
+* Upload progress
+* Duplicate filename warning
 * Store files using OpenDocMan storage conventions
 * View supported files directly in the browser
+* Prompt to download files that browsers usually cannot preview
 * Download files using original filenames
 * Maintain document metadata
+* Server-side search, date filtering, sorting, and pagination
+* Edit custom document titles
+* Soft delete custom app records without deleting OpenDocMan files
+* Health check API and `/health` page
 * Responsive modern UI
 * Lightweight PHP backend
 * MySQL persistence
@@ -179,13 +187,58 @@ app_documents
 Displayed fields:
 
 * Title
+* File Type
 * Original Filename
 * Upload Date
 
 Available actions:
 
+* Edit title
 * View
 * Download
+
+List controls:
+
+* Server-side search by title or original filename
+* Date filter
+* Sort by title, type, original filename, and upload date
+* Pagination, 10 files per page by default
+
+---
+
+## Health Check
+
+The app includes:
+
+```text
+GET /api/health.php
+```
+
+Frontend health page:
+
+```text
+http://127.0.0.1:5173/health
+```
+
+It checks:
+
+* API reachability
+* Database connectivity
+* Storage directory readability/writability
+
+---
+
+## Production Configuration
+
+Copy the example config:
+
+```bash
+cp backend/config/production.example.php backend/config/production.php
+```
+
+Then edit `backend/config/production.php` for the target machine database credentials and storage path.
+
+`backend/config/production.php` is ignored by git. Environment variables still take precedence.
 
 ---
 
@@ -241,15 +294,16 @@ npm run dev
 Default URL:
 
 ```text
-http://localhost:5173
+http://127.0.0.1:5173
 ```
 
 ### Backend
 
 ```bash
-cd backend
-php -S localhost:8080
+php -S localhost:8000 -t backend
 ```
+
+The Vite dev server proxies `/api` requests to `http://localhost:8000`.
 
 ---
 

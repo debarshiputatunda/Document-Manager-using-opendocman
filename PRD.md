@@ -20,6 +20,10 @@ Users can:
 2. See uploaded documents.
 3. Open documents.
 4. Download documents.
+5. Search, sort, filter, and paginate documents.
+6. Edit custom document titles.
+7. Remove documents from the custom list without deleting OpenDocMan storage.
+8. Check application health.
 
 No OpenDocMan UI should be visible.
 
@@ -56,6 +60,9 @@ Actions:
 * Insert metadata into odm_data
 * Save file as <odm_data.id>.dat
 * Insert row into app_documents
+* Show upload progress
+* Support drag-and-drop file selection
+* Warn when the selected original filename already exists
 
 Response:
 
@@ -68,13 +75,22 @@ Success or error message.
 Display:
 
 * Title
+* File type
 * Original filename
 * Upload date
 
 Actions:
 
+* Edit title
 * View
 * Download
+
+Controls:
+
+* Search by title or original filename
+* Filter by upload date
+* Sort by title, file type, original filename, or upload date
+* Server-side pagination, 10 documents per page by default
 
 ---
 
@@ -84,13 +100,39 @@ Open supported file types in browser.
 
 If browser preview is unavailable:
 
-Download file.
+Prompt the user to download the file instead.
 
 ---
 
 ### Download Document
 
 Download original document using original filename.
+
+---
+
+### Edit Document Title
+
+Allow users to edit the custom app title stored in `app_documents.title`.
+
+Do not modify the OpenDocMan physical file or original filename.
+
+---
+
+### Soft Delete
+
+Allow users to remove a document from the custom list by setting `app_documents.deleted_at`.
+
+Do not delete `odm_data` rows or physical `<odm_data.id>.dat` files.
+
+---
+
+### Health Check
+
+Provide an API and simple frontend page that checks:
+
+* API reachability
+* Database connectivity
+* Storage directory readability/writability
 
 ---
 
@@ -104,7 +146,16 @@ Upload document.
 
 GET /api/documents.php
 
-List documents.
+List documents with server-side search, date filter, sorting, and pagination.
+
+Supported query parameters:
+
+* page
+* page_size
+* search
+* date
+* sort
+* direction
 
 ---
 
@@ -120,6 +171,24 @@ Download document.
 
 ---
 
+POST /api/update_title.php
+
+Update the custom document title.
+
+---
+
+POST /api/delete.php
+
+Soft delete a custom app document row.
+
+---
+
+GET /api/health.php
+
+Return application health status.
+
+---
+
 ## UI Requirements
 
 Layout:
@@ -129,6 +198,8 @@ Header
 Upload Form
 
 Document Table
+
+Health page at `/health`
 
 Design:
 
@@ -170,3 +241,5 @@ No framework coupling.
 6. Download implementation.
 7. Setup documentation.
 8. README.
+9. Production config example.
+10. Health check API/page.

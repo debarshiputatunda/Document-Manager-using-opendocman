@@ -45,6 +45,48 @@ function require_method(string $method): void
     }
 }
 
+function json_request_body(): array
+{
+    $rawBody = file_get_contents('php://input');
+    $payload = json_decode($rawBody ?: '', true);
+
+    if (!is_array($payload)) {
+        api_error('Invalid JSON request body.', 400);
+    }
+
+    return $payload;
+}
+
+function ensure_app_documents_deleted_at(PDO $pdo): void
+{
+    static $checked = false;
+
+    if ($checked) {
+        return;
+    }
+
+    $stmt = $pdo->query("SHOW COLUMNS FROM app_documents LIKE 'deleted_at'");
+
+    if (!$stmt->fetch()) {
+        $pdo->exec('ALTER TABLE app_documents ADD COLUMN deleted_at TIMESTAMP NULL DEFAULT NULL');
+    }
+
+    $checked = true;
+}
+
+function payload_document_id(array $payload): int
+{
+    $id = filter_var($payload['id'] ?? null, FILTER_VALIDATE_INT, [
+        'options' => ['min_range' => 1],
+    ]);
+
+    if ($id === false || $id === null) {
+        api_error('A valid document id is required.', 400);
+    }
+
+    return $id;
+}
+
 function app_document_id(): int
 {
     $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT, [
@@ -60,6 +102,8 @@ function app_document_id(): int
 
 function find_document(PDO $pdo, int $id): array
 {
+    ensure_app_documents_deleted_at($pdo);
+
     $stmt = $pdo->prepare(
         'SELECT
             app_documents.id,
@@ -71,6 +115,7 @@ function find_document(PDO $pdo, int $id): array
         FROM app_documents
         INNER JOIN odm_data ON odm_data.id = app_documents.odm_document_id
         WHERE app_documents.id = :id
+            AND app_documents.deleted_at IS NULL
         LIMIT 1'
     );
     $stmt->execute([':id' => $id]);
